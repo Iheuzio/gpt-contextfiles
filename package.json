@@ -16,15 +16,23 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [
-        {
-            "command": "extension.addFilesToGPTContext",
-            "title": "Add Files to GPT Context",
-            "category": "Explorer"
-        },
-        {
-            "command": "extension.openGPTContextPanel",
-            "title": "Open GPT Context Panel"
-        }
+      {
+          "command": "extension.addFilesToGPTContext",
+          "title": "Add Files to GPT Context",
+          "category": "Explorer"
+      },
+      {
+          "command": "extension.openGPTContextPanel",
+          "title": "Open GPT Context Panel"
+      },
+      {
+          "command": "extension.refreshSelectedFiles",
+          "title": "Refresh Selected Files"
+      },
+      {
+          "command": "extension.clearSelectedFiles",
+          "title": "Clear Selected Files"
+      }
     ],
     "menus": {
         "explorer/context": [
