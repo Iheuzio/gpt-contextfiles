@@ -133,70 +133,86 @@ const refreshFilesCommand = vscode.commands.registerCommand('extension.refreshFi
 
 // Helper function to generate the HTML content for the webview panel
 function getWebviewContent(fileContents, question) {
-    const fileList = selectedFiles
-        .map(
-            file =>
-                `<div><input type="checkbox" ${
-                    file.selected ? 'checked' : ''
-                } onchange="toggleFileSelection('${file.uri.fsPath}')" /> ${file.uri.fsPath}</div>`
-        )
-        .join('');
+  const fileList = selectedFiles
+      .map(
+          file =>
+              `<div><input type="checkbox" ${
+                  file.selected ? 'checked' : ''
+              } onchange="toggleFileSelection('${file.uri.fsPath}')" /> ${file.uri.fsPath}</div>`
+      )
+      .join('');
 
-    return `
-        <html>
-        <body>
-            <h1>GPT Context</h1>
-            <form id="questionForm">
-                <label for="question">Enter your question:</label>
-                <input type="text" id="question" name="question" required>
-                <button type="submit">Submit</button>
-                <button type="button" onclick="clearSelectedFiles()">Clear</button>
-                <button type="button" onclick="refreshSelectedFiles()">Refresh</button>
-            </form>
-            ${
-                fileContents ? `<div><pre>${fileContents}</pre></div>` : ''
-            }
-            <div>
-                <h2>Selected Files:</h2>
-                ${fileList}
-            </div>
-            <div><pre>${question ? question : ''}</pre></div>
-            <script>
-                const vscode = acquireVsCodeApi();
+  const formattedContents = selectedFiles
+      .map(file => {
+          const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
+          if (document) {
+              const lines = document.getText().split('\n');
+              const formattedLines = lines.map(line => `\t${line}`).join('\n');
+              return `${file.uri.fsPath}:\n\`\`\`\n${formattedLines}\n\`\`\``;
+          }
+          return '';
+      })
+      .join('\n\n');
 
-                function toggleFileSelection(uri) {
-                    vscode.postMessage({
-                        command: 'toggleFileSelection',
-                        uri: uri
-                    });
+  return `
+      <html>
+      <body>
+          <h1>GPT Context</h1>
+          <form id="questionForm">
+              <div>
+                  <label for="question">Enter your question:</label>
+                  <input type="text" id="question" name="question" required>
+                  <button type="submit">Submit</button>
+                  <button type="button" onclick="clearSelectedFiles()">Clear</button>
+                  <button type="button" onclick="refreshSelectedFiles()">Refresh</button>
+              </div>
+              <div>
+                <div><pre>${question ? question : ''}</pre></div>
+                ${
+                    fileContents ? `<div><pre>${formattedContents}</pre></div>` : ''
                 }
+              </div>
+              <div>
+                  <h2>Selected Files:</h2>
+                  ${fileList}
+              </div>
+              <script>
+                  const vscode = acquireVsCodeApi();
 
-                function clearSelectedFiles() {
-                    vscode.postMessage({
-                        command: 'clearSelectedFiles'
-                    });
-                }
+                  function toggleFileSelection(uri) {
+                      vscode.postMessage({
+                          command: 'toggleFileSelection',
+                          uri: uri
+                      });
+                  }
 
-                function refreshSelectedFiles() {
-                    vscode.postMessage({
-                        command: 'refreshFiles'
-                    });
-                }
+                  function clearSelectedFiles() {
+                      vscode.postMessage({
+                          command: 'clearSelectedFiles'
+                      });
+                  }
 
-                const form = document.getElementById('questionForm');
-                form.addEventListener('submit', event => {
-                    event.preventDefault();
-                    const question = document.getElementById('question').value;
-                    vscode.postMessage({
-                        command: 'submitQuestion',
-                        text: question
-                    });
-                });
-            </script>
-        </body>
-        </html>
-    `;
+                  function refreshSelectedFiles() {
+                      vscode.postMessage({
+                          command: 'refreshFiles'
+                      });
+                  }
+
+                  const form = document.getElementById('questionForm');
+                  form.addEventListener('submit', event => {
+                      event.preventDefault();
+                      const question = document.getElementById('question').value;
+                      vscode.postMessage({
+                          command: 'submitQuestion',
+                          text: question
+                      });
+                  });
+              </script>
+          </body>
+          </html>
+      `;
 }
+
 
 // Activates the extension
 function activate(context) {
