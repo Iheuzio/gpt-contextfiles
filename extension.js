@@ -17,33 +17,31 @@ const selectedFiles = [];
 
 // Tree data provider for the selected files
 class FileDataProvider {
-  constructor() {
-      this._onDidChangeTreeData = new vscode.EventEmitter();
-      this.onDidChangeTreeData = this._onDidChangeTreeData.event;
-  }
+    constructor() {
+        this._onDidChangeTreeData = new vscode.EventEmitter();
+        this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+    }
 
-  refresh() {
-      this._onDidChangeTreeData.fire();
-  }
+    refresh() {
+        this._onDidChangeTreeData.fire();
+    }
 
-  getTreeItem(element) {
-      return {
-          label: element.uri.fsPath,
-          collapsibleState: vscode.TreeItemCollapsibleState.None
-      };
-  }
+    getTreeItem(element) {
+        return {
+            label: element.uri.fsPath,
+            collapsibleState: vscode.TreeItemCollapsibleState.None
+        };
+    }
 
-  getChildren(element) {
-      if (element) {
-          return [];
-      }
+    getChildren(element) {
+        if (element) {
+            return [];
+        }
 
-      // Return only the selected files
-      return selectedFiles.filter(file => file.selected);
-  }
+        // Return only the selected files
+        return selectedFiles.filter(file => file.selected);
+    }
 }
-
-
 
 // Command for adding files to gpt-contextfiles
 const addFilesCommand = vscode.commands.registerCommand('extension.addFilesToGPTContext', () => {
@@ -102,20 +100,35 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
                 fileDataProvider.refresh();
             }
         } else if (message.command === 'clearSelectedFiles') {
-            selectedFiles.forEach(file => {
-                file.selected = false;
-            });
+            const clearedFiles = selectedFiles.filter(file => file.selected === false);
             selectedFiles.length = 0; // Clear the array
+            clearedFiles.forEach(file => {
+                fileDataProvider.refresh();
+            });
+            panel.webview.html = getWebviewContent();
+        } else if (message.command === 'refreshFiles') {
             fileDataProvider.refresh();
-        } else if (message.command === 'refreshSelectedFiles') {
-            fileDataProvider.refresh();
+            panel.webview.html = getWebviewContent();
         }
     });
 });
 
 // Command for refreshing the selected files
 const refreshSelectedFilesCommand = vscode.commands.registerCommand('extension.refreshSelectedFiles', () => {
-  fileDataProvider.refresh();
+    fileDataProvider.refresh();
+});
+
+// Command for clearing the selected files
+const clearSelectedFilesCommand = vscode.commands.registerCommand('extension.clearSelectedFiles', () => {
+    selectedFiles.forEach(file => {
+        file.selected = false;
+    });
+    fileDataProvider.refresh();
+});
+
+// Command for refreshing all files
+const refreshFilesCommand = vscode.commands.registerCommand('extension.refreshFiles', () => {
+    fileDataProvider.refresh();
 });
 
 // Helper function to generate the HTML content for the webview panel
@@ -166,7 +179,7 @@ function getWebviewContent(fileContents, question) {
 
                 function refreshSelectedFiles() {
                     vscode.postMessage({
-                        command: 'refreshSelectedFiles'
+                        command: 'refreshFiles'
                     });
                 }
 
@@ -194,6 +207,8 @@ function activate(context) {
     context.subscriptions.push(addFilesCommand);
     context.subscriptions.push(openGPTContextPanelCommand);
     context.subscriptions.push(refreshSelectedFilesCommand);
+    context.subscriptions.push(clearSelectedFilesCommand);
+    context.subscriptions.push(refreshFilesCommand);
 
     // Refresh the file data provider when a file is added or removed from the workspace
     vscode.workspace.onDidChangeWorkspaceFolders(() => {
