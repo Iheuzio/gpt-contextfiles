@@ -233,6 +233,7 @@ function getWebviewContent(fileContents, question) {
       `;
 }
 
+
 // Activates the extension
 function activate(context) {
     context.subscriptions.push(addFilesCommand);
