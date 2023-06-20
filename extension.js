@@ -80,7 +80,17 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
     panel.webview.onDidReceiveMessage(message => {
         if (message.command === 'submitQuestion') {
             const question = message.text;
+            const selectedUris = message.selectedUris;
+
+            // Update the selectedFiles array based on the selectedUris
+            selectedFiles.forEach(file => {
+                file.selected = selectedUris.includes(file.uri.fsPath);
+            });
+
+            fileDataProvider.refresh();
+
             const fileContents = selectedFiles
+                .filter(file => file.selected)
                 .map(file => {
                     const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
                     if (document) {
@@ -133,28 +143,29 @@ const refreshFilesCommand = vscode.commands.registerCommand('extension.refreshFi
 
 // Helper function to generate the HTML content for the webview panel
 function getWebviewContent(fileContents, question) {
-  const fileList = selectedFiles
-      .map(
-          file =>
-              `<div><input type="checkbox" ${
-                  file.selected ? 'checked' : ''
-              } onchange="toggleFileSelection('${file.uri.fsPath}')" /> ${file.uri.fsPath}</div>`
-      )
-      .join('');
+    const fileList = selectedFiles
+        .map(
+            file =>
+                `<div><input type="checkbox" data-uri="${file.uri.fsPath}" ${
+                    file.selected ? 'checked' : ''
+                } onchange="toggleFileSelection('${file.uri.fsPath}')" /> ${file.uri.fsPath}</div>`
+        )
+        .join('');
 
-  const formattedContents = selectedFiles
-      .map(file => {
-          const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
-          if (document) {
-              const lines = document.getText().split('\n');
-              const formattedLines = lines.map(line => `\t${line}`).join('\n');
-              return `${file.uri.fsPath}:\n\`\`\`\n${formattedLines}\n\`\`\``;
-          }
-          return '';
-      })
-      .join('\n\n');
+    const formattedContents = selectedFiles
+        .filter(file => file.selected)
+        .map(file => {
+            const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
+            if (document) {
+                const lines = document.getText().split('\n');
+                const formattedLines = lines.map(line => `\t${line}`).join('\n');
+                return `${file.uri.fsPath}:\n\`\`\`\n${formattedLines}\n\`\`\``;
+            }
+            return '';
+        })
+        .join('\n\n');
 
-  return `
+    return `
       <html>
       <body>
           <h1>GPT Context</h1>
@@ -202,9 +213,18 @@ function getWebviewContent(fileContents, question) {
                   form.addEventListener('submit', event => {
                       event.preventDefault();
                       const question = document.getElementById('question').value;
+                      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                      const selectedUris = [];
+                      checkboxes.forEach(checkbox => {
+                          if (checkbox.checked) {
+                              const uri = checkbox.getAttribute('data-uri');
+                              selectedUris.push(uri);
+                          }
+                      });
                       vscode.postMessage({
                           command: 'submitQuestion',
-                          text: question
+                          text: question,
+                          selectedUris: selectedUris
                       });
                   });
               </script>
@@ -216,27 +236,12 @@ function getWebviewContent(fileContents, question) {
 
 // Activates the extension
 function activate(context) {
-    // Register the file data provider
-    vscode.window.registerTreeDataProvider('gpt-contextfiles', fileDataProvider);
-
-    // Register the commands
     context.subscriptions.push(addFilesCommand);
     context.subscriptions.push(openGPTContextPanelCommand);
     context.subscriptions.push(refreshSelectedFilesCommand);
     context.subscriptions.push(clearSelectedFilesCommand);
     context.subscriptions.push(refreshFilesCommand);
-
-    // Refresh the file data provider when a file is added or removed from the workspace
-    vscode.workspace.onDidChangeWorkspaceFolders(() => {
-        fileDataProvider.refresh();
-    });
-
-    // Refresh the file data provider when a file is created, deleted, or renamed within the workspace
-    vscode.workspace.onDidChangeTextDocument(() => {
-        fileDataProvider.refresh();
-    });
+    vscode.window.registerTreeDataProvider('selectedFiles', fileDataProvider);
 }
 
-module.exports = {
-    activate
-};
+exports.activate = activate;
