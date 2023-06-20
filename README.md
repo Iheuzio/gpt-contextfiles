@@ -1,65 +1,44 @@
-# gpt-contextfiles README
+# gpt-contextfiles
 
-This is the README for your extension "gpt-contextfiles". After writing up a brief description, we recommend including the following sections.
+** currently in development, if you'll like to contribute or provide any feedback check out the [link](https://github.com/Iheuzio/gpt-contextfiles/issues) **
 
-## Features
+I was annoyed with copying responses into chatgpt and other LLMs for debugging my code across files, so I decided to make an extension that will do that.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+You simply right click each file you want to pass through, check or uncheck the checkbox, then enter your question and pass along the response over the api to your LLM.
 
-For example if there is an image subfolder under your extension project workspace:
+# Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+Not done yet
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+# Features
 
-## Requirements
+Clear -> Clears the files currently available
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Submit -> Submits the query to the api
 
-## Extension Settings
+Refresh -> refreshes the window so that all new files will be available for that session.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+User must ctrl+p and click on the `Open GPT Context Window` option and then add files (before or after), then input the question. 
 
-For example:
+# Examples
 
-This extension contributes the following settings:
+We can select two files we want to pass through, however we can uncheck one of them for later debugging and enter our question:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+```
+What does this do?
+c:\dev\test\gpt-contextfiles-test\program.js:
+\```
+	window.alert("Hello World!")
+\```
 
-## Known Issues
+Selected Files:
+[x] c:\dev\test\gpt-contextfiles-test\program.js
+[ ] c:\dev\test\gpt-contextfiles-test\program2.js
+```
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Expected Ouput:
 
-## Release Notes
+```
+The window.alert() method is a built-in JavaScript function that displays an alert box with a specified message and an OK button. In this case, the message is "Hello World!".
+```
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
