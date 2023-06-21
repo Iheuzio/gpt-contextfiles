@@ -38,6 +38,6 @@ Selected Files:
 
 Expected Ouput:
 
-```
+`
 The window.alert() method is a built-in JavaScript function that displays an alert box with a specified message and an OK button. In this case, the message is "Hello World!".
-```
+`
