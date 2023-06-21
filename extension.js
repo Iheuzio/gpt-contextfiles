@@ -104,7 +104,8 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
                     const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
                     if (document) {
                         const lines = document.getText().split('\n');
-                        return `${file.uri.fsPath}\n${lines.join('\n')}`;
+                        const formattedLines = lines.map(line => `\t${line}`).join('\n');
+                        return `${file.uri.fsPath}:\n\`\`\`\n${formattedLines}\n\`\`\``;
                     }
                     return '';
                 })
