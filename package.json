@@ -62,5 +62,9 @@
   },
   "dependencies": {
     "openai": "^3.3.0"
+  },
+  "repository":{
+  	"type":"git",
+  	"url":"https://github.com/Iheuzio/gpt-contextfiles/"
   }
 }
