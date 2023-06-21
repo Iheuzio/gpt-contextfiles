@@ -18,7 +18,7 @@ Submit -> Submits the query to the api
 
 Refresh -> refreshes the window so that all new files will be available for that session.
 
-User must ctrl+shift+p and click on the `Open GPT Context Window` option and then add files (before or after), then input the question. 
+User must ctrl+shift+p and click on the `Open GPT Context Panel` option and then add files (before or after), then input the question. 
 
 # Examples
 
