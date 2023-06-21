@@ -16,24 +16,32 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [
-        {
-            "command": "extension.addFilesToGPTContext",
-            "title": "Add Files to GPT Context",
-            "category": "Explorer"
-        },
-        {
-            "command": "extension.openGPTContextPanel",
-            "title": "Open GPT Context Panel"
-        }
+      {
+        "command": "extension.addFilesToGPTContext",
+        "title": "Add Files to GPT Context",
+        "category": "Explorer"
+      },
+      {
+        "command": "extension.openGPTContextPanel",
+        "title": "Open GPT Context Panel"
+      },
+      {
+        "command": "extension.refreshSelectedFiles",
+        "title": "Refresh Selected Files"
+      },
+      {
+        "command": "extension.clearSelectedFiles",
+        "title": "Clear Selected Files"
+      }
     ],
     "menus": {
-        "explorer/context": [
-            {
-                "when": "resourceLangId == javascript",
-                "command": "extension.addFilesToGPTContext",
-                "group": "navigation"
-            }
-        ]
+      "explorer/context": [
+        {
+          "when": "resourceLangId == javascript",
+          "command": "extension.addFilesToGPTContext",
+          "group": "navigation"
+        }
+      ]
     }
   },
   "scripts": {
@@ -42,15 +50,17 @@
     "test": "node ./test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.79.0",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "20.2.5",
+    "@types/vscode": "^1.79.0",
+    "@vscode/test-electron": "^2.3.2",
     "eslint": "^8.41.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
-    "typescript": "^5.1.3",
-    "@vscode/test-electron": "^2.3.2"
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "openai": "^3.3.0"
   }
-  
 }

@@ -8,7 +8,7 @@ You simply right click each file you want to pass through, check or uncheck the 
 
 # Installation
 
-Not done yet
+Add your api key to `OPENAI_API_KEY` for your windows/linux environment variable (tested with system variable)
 
 # Features
 
@@ -18,7 +18,7 @@ Submit -> Submits the query to the api
 
 Refresh -> refreshes the window so that all new files will be available for that session.
 
-User must ctrl+p and click on the `Open GPT Context Window` option and then add files (before or after), then input the question. 
+User must ctrl+shift+p and click on the `Open GPT Context Panel` option and then add files (before or after), then input the question. 
 
 # Examples
 
@@ -38,7 +38,6 @@ Selected Files:
 
 Expected Ouput:
 
-```
+`
 The window.alert() method is a built-in JavaScript function that displays an alert box with a specified message and an OK button. In this case, the message is "Hello World!".
-```
-
+`

@@ -1,11 +1,23 @@
 const vscode = require('vscode');
-const path = require('path');
+const { Configuration, OpenAIApi } = require("openai");
+
+// move these into the script so that instead of echoing the question and the contents,
+// it will echo the question, followed by the answer from the response when the submit button is pressed.
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(configuration);
 
 // Represents a file item in the file explorer
 class FileItem {
-    constructor(uri, checked) {
+    constructor(uri, selected = false) {
         this.uri = uri;
-        this.checked = checked || false;
+        this.selected = selected;
+    }
+
+    toggleSelected() {
+        this.selected = !this.selected;
     }
 }
 
@@ -17,7 +29,6 @@ class FileDataProvider {
     constructor() {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
-        this.filterPatterns = ['*.*']; // Default filter pattern
     }
 
     refresh() {
@@ -27,8 +38,7 @@ class FileDataProvider {
     getTreeItem(element) {
         return {
             label: element.uri.fsPath,
-            collapsibleState: vscode.TreeItemCollapsibleState.None,
-            checked: element.checked
+            collapsibleState: vscode.TreeItemCollapsibleState.None
         };
     }
 
@@ -36,56 +46,30 @@ class FileDataProvider {
         if (element) {
             return [];
         }
-        return selectedFiles;
-    }
 
-    setFilter(filter) {
-        this.filterPatterns = filter.split(',').map(pattern => pattern.trim());
-        this.refresh();
-    }
-
-    filterFiles(files) {
-        return files.filter(file => {
-            const extension = path.extname(file.uri.fsPath);
-            return this.filterPatterns.some(pattern => {
-                const regex = new RegExp(pattern.replace(/\./g, '\\.').replace(/\*/g, '.*'));
-                return regex.test(extension);
-            });
-        });
+        // Return only the selected files
+        return selectedFiles.filter(file => file.selected);
     }
 }
 
 // Command for adding files to gpt-contextfiles
 const addFilesCommand = vscode.commands.registerCommand('extension.addFilesToGPTContext', () => {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (workspaceFolders && workspaceFolders.length > 0) {
-      const workspacePath = workspaceFolders[0].uri.fsPath;
-      vscode.workspace.findFiles('**/*', '', 1000).then(files => {
-          const fileItems = files.map(file => new FileItem(file));
-          selectedFiles.splice(0, selectedFiles.length, ...fileItems);
-          fileDataProvider.refresh();
-      });
-  }
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        const uri = editor.document.uri;
+        const existingFileIndex = selectedFiles.findIndex(file => file.uri.fsPath === uri.fsPath);
+
+        if (existingFileIndex !== -1) {
+            // File already exists, remove it from the list
+            selectedFiles.splice(existingFileIndex, 1);
+        } else {
+            // Add the file to the list with selected state
+            selectedFiles.push(new FileItem(uri, true));
+        }
+
+        fileDataProvider.refresh();
+    }
 });
-
-// Refresh the file list when workspace changes (file creation, deletion, renaming)
-vscode.workspace.onDidChangeWorkspaceFolders(() => {
-  vscode.commands.executeCommand('extension.addFilesToGPTContext');
-});
-
-vscode.workspace.onDidCreateFiles(() => {
-  vscode.commands.executeCommand('extension.addFilesToGPTContext');
-});
-
-vscode.workspace.onDidDeleteFiles(() => {
-  vscode.commands.executeCommand('extension.addFilesToGPTContext');
-});
-
-vscode.workspace.onDidRenameFiles(() => {
-  vscode.commands.executeCommand('extension.addFilesToGPTContext');
-});
-
-
 
 const fileDataProvider = new FileDataProvider();
 
@@ -102,133 +86,180 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
 
     panel.webview.html = getWebviewContent();
 
-    panel.webview.onDidReceiveMessage(message => {
+    panel.webview.onDidReceiveMessage(async message => {
         if (message.command === 'submitQuestion') {
             const question = message.text;
-            const selectedFilePaths = selectedFiles
-                .filter(file => file.checked)
-                .map(file => file.uri.fsPath);
+            const selectedUris = message.selectedUris;
 
-            const fileContents = selectedFilePaths
-                .map(filePath => {
-                    const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === filePath);
+            // Update the selectedFiles array based on the selectedUris
+            selectedFiles.forEach(file => {
+                file.selected = selectedUris.includes(file.uri.fsPath);
+            });
+
+            fileDataProvider.refresh();
+
+            const fileContents = selectedFiles
+                .filter(file => file.selected)
+                .map(file => {
+                    const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
                     if (document) {
                         const lines = document.getText().split('\n');
-                        return `${filePath}\n${lines.join('\n')}`;
+                        const formattedLines = lines.map(line => `\t${line}`).join('\n');
+                        return `${file.uri.fsPath}:\n\`\`\`\n${formattedLines}\n\`\`\``;
                     }
                     return '';
                 })
                 .join('\n\n');
 
-            panel.webview.html = getWebviewContent(fileContents, question);
-        } else if (message.command === 'fileSelectionChanged') {
-            const { filePath, checked } = message;
-            const file = selectedFiles.find(file => file.uri.fsPath === filePath);
-            if (file) {
-                file.checked = checked;
+            // Call OpenAI API with the question and file contents
+            try {
+                const chatCompletion = await openai.createChatCompletion({
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
+                        { role: "user", content: question },
+                        { role: "assistant", content: fileContents }
+                    ],
+                });
+
+                // Extract the answer from the OpenAI response
+                const answer = chatCompletion.data.choices[0].message.content;
+
+                // Update the webview content to display only the OpenAI response
+                panel.webview.html = getWebviewContent(answer, question);
+            } catch (error) {
+                // Handle any errors from the OpenAI API
+                console.error("Failed to get OpenAI response:", error);
+                panel.webview.html = getWebviewContent(`Failed to get response from OpenAI API. Error: ${error.message}`, question);
             }
-        } else if (message.command === 'filterFiles') {
-            const { filter } = message;
-            fileDataProvider.setFilter(filter);
+        } else if (message.command === 'toggleFileSelection') {
+            const uri = message.uri;
+            const file = selectedFiles.find(file => file.uri.fsPath === uri);
+            if (file) {
+                file.toggleSelected();
+                fileDataProvider.refresh();
+            }
+        } else if (message.command === 'clearSelectedFiles') {
+            const clearedFiles = selectedFiles.filter(file => file.selected === false);
+            selectedFiles.length = 0; // Clear the array
+            clearedFiles.forEach(file => {
+                fileDataProvider.refresh();
+            });
+            panel.webview.html = getWebviewContent();
+        } else if (message.command === 'refreshFiles') {
+            fileDataProvider.refresh();
+            panel.webview.html = getWebviewContent();
         }
     });
 });
 
+
+// Command for refreshing the selected files
+const refreshSelectedFilesCommand = vscode.commands.registerCommand('extension.refreshSelectedFiles', () => {
+    fileDataProvider.refresh();
+});
+
+// Command for clearing the selected files
+const clearSelectedFilesCommand = vscode.commands.registerCommand('extension.clearSelectedFiles', () => {
+    selectedFiles.forEach(file => {
+        file.selected = false;
+    });
+    fileDataProvider.refresh();
+});
+
+// Command for refreshing all files
+const refreshFilesCommand = vscode.commands.registerCommand('extension.refreshFiles', () => {
+    fileDataProvider.refresh();
+});
+
 // Helper function to generate the HTML content for the webview panel
-function getWebviewContent(fileContents, question) {
-    const fileItems = fileDataProvider
-        .filterFiles(selectedFiles)
-        .map(file => `
-            <div>
-                <input type="checkbox" id="${file.uri.fsPath}" name="file" value="${file.uri.fsPath}" ${file.checked ? 'checked' : ''}>
-                <label for="${file.uri.fsPath}">${file.uri.fsPath}</label>
-            </div>
-        `)
-        .join('\n');
+function getWebviewContent(apiResponse = '', question = '') {
+    const fileList = selectedFiles
+        .map(
+            file =>
+                `<div><input type="checkbox" data-uri="${file.uri.fsPath}" ${
+                    file.selected ? 'checked' : ''
+                } onchange="toggleFileSelection('${file.uri.fsPath}')" /> ${file.uri.fsPath}</div>`
+        )
+        .join('');
 
     return `
-        <html>
-        <body>
-            <h1>GPT Context</h1>
-            <form id="questionForm">
-                <label for="question">Enter your question:</label>
-                <input type="text" id="question" name="question" required>
-                <button type="submit">Submit</button>
-            </form>
-            <div>
-                <h3>Select Files:</h3>
-                <div>
-                    <label for="filter">Filter:</label>
-                    <input type="text" id="filter" name="filter" value="${fileDataProvider.filterPatterns.join(', ')}">
-                    <button id="applyFilter">Apply</button>
-                </div>
-                ${fileItems}
-            </div>
-            ${
-                fileContents ? `<div><pre>${fileContents}</pre></div>` : ''
-            }
-            <div><pre>${question ? question : ''}</pre></div>
-            <script>
-                const vscode = acquireVsCodeApi();
+      <html>
+      <body>
+          <h1>GPT Context</h1>
+          <form id="questionForm">
+              <div>
+                  <label for="question">Enter your question:</label>
+                  <input type="text" id="question" name="question" required>
+                  <button type="submit">Submit</button>
+                  <button type="button" onclick="clearSelectedFiles()">Clear</button>
+                  <button type="button" onclick="refreshSelectedFiles()">Refresh</button>
+              </div>
+              <div>
+                <div><pre>${question ? question : ''}</pre></div>
+                ${
+                    apiResponse ? `<div><pre>${apiResponse}</pre></div>` : ''
+                }
+              </div>
+              <div>
+                  <h2>Selected Files:</h2>
+                  ${fileList}
+              </div>
+              <script>
+                  const vscode = acquireVsCodeApi();
 
-                const form = document.getElementById('questionForm');
-                form.addEventListener('submit', event => {
-                    event.preventDefault();
-                    const question = document.getElementById('question').value;
-                    vscode.postMessage({
-                        command: 'submitQuestion',
-                        text: question
-                    });
-                });
+                  function toggleFileSelection(uri) {
+                      vscode.postMessage({
+                          command: 'toggleFileSelection',
+                          uri: uri
+                      });
+                  }
 
-                const fileCheckboxes = document.querySelectorAll('input[name="file"]');
-                fileCheckboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', event => {
-                        const filePath = event.target.value;
-                        const checked = event.target.checked;
-                        vscode.postMessage({
-                            command: 'fileSelectionChanged',
-                            filePath: filePath,
-                            checked: checked
-                        });
-                    });
-                });
+                  function clearSelectedFiles() {
+                      vscode.postMessage({
+                          command: 'clearSelectedFiles'
+                      });
+                  }
 
-                const applyFilterButton = document.getElementById('applyFilter');
-                applyFilterButton.addEventListener('click', () => {
-                    const filterInput = document.getElementById('filter');
-                    const filterValue = filterInput.value;
-                    vscode.postMessage({
-                        command: 'filterFiles',
-                        filter: filterValue
-                    });
-                });
-            </script>
-        </body>
-        </html>
-    `;
+                  function refreshSelectedFiles() {
+                      vscode.postMessage({
+                          command: 'refreshFiles'
+                      });
+                  }
+
+                  const form = document.getElementById('questionForm');
+                  form.addEventListener('submit', event => {
+                      event.preventDefault();
+                      const question = document.getElementById('question').value;
+                      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                      const selectedUris = [];
+                      checkboxes.forEach(checkbox => {
+                          if (checkbox.checked) {
+                              const uri = checkbox.getAttribute('data-uri');
+                              selectedUris.push(uri);
+                          }
+                      });
+                      vscode.postMessage({
+                          command: 'submitQuestion',
+                          text: question,
+                          selectedUris: selectedUris
+                      });
+                  });
+              </script>
+          </body>
+          </html>
+      `;
 }
+
 
 // Activates the extension
 function activate(context) {
-    // Register the file data provider
-    vscode.window.registerTreeDataProvider('gpt-contextfiles', fileDataProvider);
-
-    // Register the commands
     context.subscriptions.push(addFilesCommand);
     context.subscriptions.push(openGPTContextPanelCommand);
-
-    // Refresh the file data provider when a file is added or removed from the workspace
-    vscode.workspace.onDidChangeWorkspaceFolders(() => {
-        fileDataProvider.refresh();
-    });
-
-    // Refresh the file data provider when a file is created, deleted, or renamed within the workspace
-    vscode.workspace.onDidChangeTextDocument(() => {
-        fileDataProvider.refresh();
-    });
+    context.subscriptions.push(refreshSelectedFilesCommand);
+    context.subscriptions.push(clearSelectedFilesCommand);
+    context.subscriptions.push(refreshFilesCommand);
+    vscode.window.registerTreeDataProvider('selectedFiles', fileDataProvider);
 }
 
-module.exports = {
-    activate
-};
+exports.activate = activate;
