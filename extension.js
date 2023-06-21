@@ -1,4 +1,13 @@
 const vscode = require('vscode');
+const { Configuration, OpenAIApi } = require("openai");
+
+// move these into the script so that instead of echoing the question and the contents,
+// it will echo the question, followed by the answer from the response when the submit button is pressed.
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(configuration);
 
 // Represents a file item in the file explorer
 class FileItem {
@@ -77,7 +86,7 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
 
     panel.webview.html = getWebviewContent();
 
-    panel.webview.onDidReceiveMessage(message => {
+    panel.webview.onDidReceiveMessage(async message => {
         if (message.command === 'submitQuestion') {
             const question = message.text;
             const selectedUris = message.selectedUris;
@@ -101,7 +110,27 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
                 })
                 .join('\n\n');
 
-            panel.webview.html = getWebviewContent(fileContents, question);
+            // Call OpenAI API with the question and file contents
+            try {
+                const chatCompletion = await openai.createChatCompletion({
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
+                        { role: "user", content: question },
+                        { role: "assistant", content: fileContents }
+                    ],
+                });
+
+                // Extract the answer from the OpenAI response
+                const answer = chatCompletion.data.choices[0].message.content;
+
+                // Update the webview content to display only the OpenAI response
+                panel.webview.html = getWebviewContent(answer, question);
+            } catch (error) {
+                // Handle any errors from the OpenAI API
+                console.error("Failed to get OpenAI response:", error);
+                panel.webview.html = getWebviewContent(`Failed to get response from OpenAI API. Error: ${error.message}`, question);
+            }
         } else if (message.command === 'toggleFileSelection') {
             const uri = message.uri;
             const file = selectedFiles.find(file => file.uri.fsPath === uri);
@@ -123,6 +152,7 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
     });
 });
 
+
 // Command for refreshing the selected files
 const refreshSelectedFilesCommand = vscode.commands.registerCommand('extension.refreshSelectedFiles', () => {
     fileDataProvider.refresh();
@@ -142,7 +172,7 @@ const refreshFilesCommand = vscode.commands.registerCommand('extension.refreshFi
 });
 
 // Helper function to generate the HTML content for the webview panel
-function getWebviewContent(fileContents, question) {
+function getWebviewContent(apiResponse = '', question = '') {
     const fileList = selectedFiles
         .map(
             file =>
@@ -151,19 +181,6 @@ function getWebviewContent(fileContents, question) {
                 } onchange="toggleFileSelection('${file.uri.fsPath}')" /> ${file.uri.fsPath}</div>`
         )
         .join('');
-
-    const formattedContents = selectedFiles
-        .filter(file => file.selected)
-        .map(file => {
-            const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
-            if (document) {
-                const lines = document.getText().split('\n');
-                const formattedLines = lines.map(line => `\t${line}`).join('\n');
-                return `${file.uri.fsPath}:\n\`\`\`\n${formattedLines}\n\`\`\``;
-            }
-            return '';
-        })
-        .join('\n\n');
 
     return `
       <html>
@@ -180,7 +197,7 @@ function getWebviewContent(fileContents, question) {
               <div>
                 <div><pre>${question ? question : ''}</pre></div>
                 ${
-                    fileContents ? `<div><pre>${formattedContents}</pre></div>` : ''
+                    apiResponse ? `<div><pre>${apiResponse}</pre></div>` : ''
                 }
               </div>
               <div>
