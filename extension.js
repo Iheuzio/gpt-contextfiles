@@ -9,17 +9,6 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-async function getChatCompletion() {
-    const chatCompletion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: "Hello world"}],
-    });
-    console.log(chatCompletion.data.choices[0].message);
-}
-
-getChatCompletion();
-//
-
 // Represents a file item in the file explorer
 class FileItem {
     constructor(uri, selected = false) {
@@ -135,12 +124,12 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
                 // Extract the answer from the OpenAI response
                 const answer = chatCompletion.data.choices[0].message.content;
 
-                // Update the webview content to display only the question and OpenAI response
+                // Update the webview content to display only the OpenAI response
                 panel.webview.html = getWebviewContent(answer, question);
             } catch (error) {
                 // Handle any errors from the OpenAI API
                 console.error("Failed to get OpenAI response:", error);
-                // My tokens ran out so I cannot develop further.
+                panel.webview.html = getWebviewContent(`Failed to get response from OpenAI API. Error: ${error.message}`, question);
             }
         } else if (message.command === 'toggleFileSelection') {
             const uri = message.uri;
@@ -183,7 +172,7 @@ const refreshFilesCommand = vscode.commands.registerCommand('extension.refreshFi
 });
 
 // Helper function to generate the HTML content for the webview panel
-function getWebviewContent(fileContents, question) {
+function getWebviewContent(apiResponse = '', question = '') {
     const fileList = selectedFiles
         .map(
             file =>
@@ -192,19 +181,6 @@ function getWebviewContent(fileContents, question) {
                 } onchange="toggleFileSelection('${file.uri.fsPath}')" /> ${file.uri.fsPath}</div>`
         )
         .join('');
-
-    const formattedContents = selectedFiles
-        .filter(file => file.selected)
-        .map(file => {
-            const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === file.uri.fsPath);
-            if (document) {
-                const lines = document.getText().split('\n');
-                const formattedLines = lines.map(line => `\t${line}`).join('\n');
-                return `${file.uri.fsPath}:\n\`\`\`\n${formattedLines}\n\`\`\``;
-            }
-            return '';
-        })
-        .join('\n\n');
 
     return `
       <html>
@@ -221,7 +197,7 @@ function getWebviewContent(fileContents, question) {
               <div>
                 <div><pre>${question ? question : ''}</pre></div>
                 ${
-                    fileContents ? `<div><pre>${formattedContents}</pre></div>` : ''
+                    apiResponse ? `<div><pre>${apiResponse}</pre></div>` : ''
                 }
               </div>
               <div>
