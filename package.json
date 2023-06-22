@@ -7,7 +7,13 @@
     "vscode": "^1.79.0"
   },
   "categories": [
-    "Machine Learning"
+    "Machine Learning",
+    "Debuggers",
+    "Formatters",
+    "Linters",
+    "Programming Languages",
+    "Testing",
+    "Snippets"
   ],
   "tags": [
     "16k",
