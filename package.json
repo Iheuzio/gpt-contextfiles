@@ -42,6 +42,15 @@
           "group": "navigation"
         }
       ]
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "selectedFiles",
+          "name": "Selected Files",
+          "when": "explorerResourceIsFolder && explorerViewletVisible"
+        }
+      ]
     }
   },
   "scripts": {
@@ -62,5 +71,11 @@
   },
   "dependencies": {
     "openai": "^3.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Iheuzio/gpt-contextfiles/"
+  },
+  "icon": "images/gpt-icon.jpg",
+  "publisher": "Iheuzio"
 }

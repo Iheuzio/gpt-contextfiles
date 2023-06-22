@@ -114,7 +114,7 @@ const openGPTContextPanelCommand = vscode.commands.registerCommand('extension.op
             // Call OpenAI API with the question and file contents
             try {
                 const chatCompletion = await openai.createChatCompletion({
-                    model: "gpt-3.5-turbo",
+                    model: "gpt-3.5-turbo-16k",
                     messages: [
                         { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
                         { role: "user", content: question },
