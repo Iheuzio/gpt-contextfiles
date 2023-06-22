@@ -2,12 +2,32 @@
   "name": "gpt-contextfiles",
   "displayName": "GPT-ContextFiles",
   "description": "Choose the files to pass into GPT to provide a question with multiple files (doesn't check context)",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.79.0"
   },
   "categories": [
-    "Machine Learning"
+    "Machine Learning",
+    "Debuggers",
+    "Formatters",
+    "Linters",
+    "Programming Languages",
+    "Testing",
+    "Snippets"
+  ],
+  "tags": [
+    "16k",
+    "GPT",
+    "ai",
+    "testing",
+    "debugging",
+    "files",
+    "api"
+  ],
+  "relatedTags": [
+    "Artificial Intelligence",
+    "Natural Language Processing",
+    "Code editor"
   ],
   "activationEvents": [
     "onCommand:extension.addFilesToGPTContext",
