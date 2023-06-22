@@ -6,6 +6,16 @@ I was annoyed with copying responses into chatgpt and other LLMs for debugging m
 
 You simply right click each file you want to pass through, check or uncheck the checkbox, then enter your question and pass along the response over the api to your LLM.
 
+This extension uses the openai api, there are many models avaliable:
+
+https://openai.com/pricing
+
+> However, being orientated with managing files this project defaults to the 16k context with GPT-3.5-turbo-16k
+
+If you wish to change the model, you must change the model in the extension.js file
+
+https://platform.openai.com/docs/models/gpt-3-5
+
 # Installation
 
 Add your api key to `OPENAI_API_KEY` for your windows/linux environment variable (tested with system variable)
