@@ -31,7 +31,8 @@
   ],
   "activationEvents": [
     "onCommand:extension.addFilesToGPTContext",
-    "onCommand:extension.openGPTContextPanel"
+    "onCommand:extension.openGPTContextPanel",
+    "onCommand:extension.gpt-context-sidebar"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -54,6 +55,15 @@
         "title": "Clear Selected Files"
       }
     ],
+    "viewsContainers" : {
+      "activitybar": [
+        {
+          "id": "gpt-contextfiles-sidebar-view",
+          "title": "GPT Context",
+          "icon": "images/files.svg"
+        }
+      ]
+    },
     "menus": {
       "explorer/context": [
         {
@@ -70,8 +80,17 @@
           "name": "Selected Files",
           "when": "explorerResourceIsFolder && explorerViewletVisible"
         }
+      ],
+      "gpt-contextfiles-sidebar-view": [
+          {
+              "type": "webview",
+              "id": "gpt-context-sidebar",
+              "name": "GPTContextFiles",
+              "icon": "images/files.svg",
+              "contextualTitle": "GPTContext"
+          }
       ]
-    }
+  }
   },
   "scripts": {
     "lint": "eslint .",
