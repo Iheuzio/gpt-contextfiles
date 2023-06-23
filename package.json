@@ -2,16 +2,37 @@
   "name": "gpt-contextfiles",
   "displayName": "GPT-ContextFiles",
   "description": "Choose the files to pass into GPT to provide a question with multiple files (doesn't check context)",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.79.0"
   },
   "categories": [
-    "Machine Learning"
+    "Machine Learning",
+    "Debuggers",
+    "Formatters",
+    "Linters",
+    "Programming Languages",
+    "Testing",
+    "Snippets"
+  ],
+  "tags": [
+    "16k",
+    "GPT",
+    "ai",
+    "testing",
+    "debugging",
+    "files",
+    "api"
+  ],
+  "relatedTags": [
+    "Artificial Intelligence",
+    "Natural Language Processing",
+    "Code editor"
   ],
   "activationEvents": [
     "onCommand:extension.addFilesToGPTContext",
-    "onCommand:extension.openGPTContextPanel"
+    "onCommand:extension.openGPTContextPanel",
+    "onCommand:extension.gpt-context-sidebar"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -34,6 +55,15 @@
         "title": "Clear Selected Files"
       }
     ],
+    "viewsContainers" : {
+      "activitybar": [
+        {
+          "id": "gpt-contextfiles-sidebar-view",
+          "title": "GPT Context",
+          "icon": "images/files.svg"
+        }
+      ]
+    },
     "menus": {
       "explorer/context": [
         {
@@ -50,8 +80,17 @@
           "name": "Selected Files",
           "when": "explorerResourceIsFolder && explorerViewletVisible"
         }
+      ],
+      "gpt-contextfiles-sidebar-view": [
+          {
+              "type": "webview",
+              "id": "gpt-context-sidebar",
+              "name": "Process Queries",
+              "icon": "images/files.svg",
+              "contextualTitle": "GPTContext"
+          }
       ]
-    }
+  }
   },
   "scripts": {
     "lint": "eslint .",
