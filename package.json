@@ -85,7 +85,7 @@
           {
               "type": "webview",
               "id": "gpt-context-sidebar",
-              "name": "GPTContextFiles",
+              "name": "Process Queries",
               "icon": "images/files.svg",
               "contextualTitle": "GPTContext"
           }
