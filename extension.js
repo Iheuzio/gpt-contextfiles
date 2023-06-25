@@ -224,13 +224,9 @@ function getWebviewContent(apiResponse = '', question = '') {
                     outline: none;
                     font-size: 14px;
                 }
-                
+
                 #response {
-                    border: 1px solid #000;
-                    background-color: #e0e0e0;
-                    padding: 10px;
-                    margin-top: 20px;
-                    overflow-wrap: break-word;
+                    white-space: pre-wrap;
                 }
                 
                 #file-list {
@@ -418,7 +414,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 div#api-response.content.active {
                     background-color: #313131;
                 }
-            
+
             </style>
       </head>
       <body class="panel">
@@ -443,9 +439,11 @@ function getWebviewContent(apiResponse = '', question = '') {
                   </div>
                   ${
                       apiResponse ? `
-                          <div id="rendered">
-                              <p id="responses">${apiResponse}</p>
-                          </div>
+                        <div id="rendered">
+                                <p id="responses">
+                                    <pre id="response">${apiResponse.replace(/```([^```]+)```/g, '<code>$1</code>')}</pre>
+                                </p>
+                        </div>
                       ` : null
                   }
               </div>
@@ -481,7 +479,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                   function toggleApiResponse() {
                     const apiResponse = document.getElementById('api-response');
                     var response = document.getElementById('responses');
-                    if(response === null || response === 'null') {
+                    if(response === null) {
                         return;
                     }
                     apiResponse.classList.toggle('active');
