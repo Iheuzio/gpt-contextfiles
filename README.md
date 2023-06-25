@@ -28,9 +28,18 @@ Submit -> Submits the query to the api
 
 Refresh -> refreshes the window so that all new files will be available for that session.
 
-User must ctrl+shift+p and click on the `Open GPT Context Panel` option and then add files (before or after), then input the question. 
+- Right click to add files to the context window
+- Click on the extension addon to open the context window, refresh to update the files to check.
+- Select the files uses checkboxes
+- After submit is pressed, wait until the question disappears, this means the query is processed by openai and was fully sent
+- Click `API Response` to view your query
 
 # Examples
+
+Demo of how to use the extension:
+![](./images/demo-program.gif)
+
+# How it works
 
 We can select two files we want to pass through, however we can uncheck one of them for later debugging and enter our question:
 
@@ -40,14 +49,11 @@ c:\dev\test\gpt-contextfiles-test\program.js:
 \```
 	window.alert("Hello World!")
 \```
+```
 
+Functions based on the principle of files passed into it
+```
 Selected Files:
 [x] c:\dev\test\gpt-contextfiles-test\program.js
 [ ] c:\dev\test\gpt-contextfiles-test\program2.js
 ```
-
-Expected Ouput:
-
-`
-The window.alert() method is a built-in JavaScript function that displays an alert box with a specified message and an OK button. In this case, the message is "Hello World!".
-`

@@ -101,8 +101,7 @@ async function handleQuestionSubmission(panel, question, selectedUris) {
             model: "gpt-3.5-turbo-16k",
             messages: [
                 { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
-                { role: "user", content: question },
-                { role: "assistant", content: fileContents }
+                { role: "user", content: question + "\n" + fileContents},
             ],
         });
 
@@ -445,7 +444,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                   ${
                       apiResponse ? `
                           <div id="rendered">
-                              <p>${apiResponse}</p>
+                              <p id="responses">${apiResponse}</p>
                           </div>
                       ` : null
                   }
@@ -481,6 +480,10 @@ function getWebviewContent(apiResponse = '', question = '') {
 
                   function toggleApiResponse() {
                     const apiResponse = document.getElementById('api-response');
+                    var response = document.getElementById('responses');
+                    if(response === null || response === 'null') {
+                        return;
+                    }
                     apiResponse.classList.toggle('active');
                     const content = apiResponse;
                     const collapsible = apiResponse.previousElementSibling;
