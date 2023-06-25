@@ -4,6 +4,29 @@ Version History
 
 ## [Unreleased]
 
+## [Release 0.1.3]
+
+## What's Changed
+* fix(explorer-context): Shows the add files context for any file by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/19
+* fix(assistant): Assistant would not answer reponse by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/20
+* Release 0.1.3 by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/21
+
+**Full Changelog**: https://github.com/Iheuzio/gpt-contextfiles/compare/0.1.2...0.1.3
+
+## [Release 0.1.2]
+
+## What's Changed
+* feature(tags): associate project with relative keywords by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/11
+* feature(categories): Expand into other categories related to this program by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/12
+* Update issue templates by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/13
+* Adding Guides by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/14
+* feature(sidebar): Renders webpanel on the side by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/15
+* fix(css): sidebar now has css by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/16
+* Release 0.1.2 by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/17
+
+
+**Full Changelog**: https://github.com/Iheuzio/gpt-contextfiles/compare/0.1.0...0.1.2
+
 ## [Release 0.1.1]
 
 Swapped category from `other` to `Machine Learning` to better reflect use-case
