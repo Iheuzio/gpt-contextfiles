@@ -101,8 +101,7 @@ async function handleQuestionSubmission(panel, question, selectedUris) {
             model: "gpt-3.5-turbo-16k",
             messages: [
                 { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
-                { role: "user", content: question },
-                { role: "assistant", content: fileContents }
+                { role: "user", content: question + "\n" + fileContents},
             ],
         });
 
