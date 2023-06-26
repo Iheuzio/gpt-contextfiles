@@ -98,7 +98,7 @@ async function handleQuestionSubmission(panel, question, selectedUris) {
     // Call OpenAI API with the question and file contents
     try {
         const chatCompletion = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
+            model: "gpt-3.5-turbo-16k",
             messages: [
                 { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
                 { role: "user", content: question + "\n" + fileContents},
@@ -193,7 +193,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                width: 50%;
+                width: 90%;
                 height: 100%;
                 margin: 0 auto;
                 background-color: #1e1e1e;

@@ -1,5 +1,7 @@
 # gpt-contextfiles
 
+![gpt-contextfiles viewport](extension.png)
+
 > if you'll like to contribute or provide any feedback check out the [link](https://github.com/Iheuzio/gpt-contextfiles/issues)
 
 This extension uses the openai api, there are many models avaliable:
@@ -28,12 +30,14 @@ Submit -> Submits the query to the api
 
 Refresh -> refreshes the window so that all new files will be available for that session.
 
-Click -> Click the orange code and then paste it in your editor for fast coding
-
 - Right click to add files to the context window
 - Click on the extension addon to open the context window, refresh to update the files to check.
 - Select the files uses checkboxes
 - Wait for response to be returned
+
+Other features:
+![Copy button demonstration](copy-image.png)
+- Click copy to to copy the snippet of code into your file for fast coding
 
 # How it works
 
