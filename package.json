@@ -1,7 +1,7 @@
 {
   "name": "gpt-contextfiles",
   "displayName": "GPT-ContextFiles",
-  "description": "Choose the files to pass into GPT to provide a question with multiple files (doesn't check context)",
+  "description": "Choose the files to pass into GPT to provide a question with multiple files",
   "version": "0.2.1",
   "engines": {
     "vscode": "^1.79.0"
@@ -22,7 +22,12 @@
     "testing",
     "debugging",
     "files",
-    "api"
+    "api",
+    "snippets",
+    "openai",
+    "vscode",
+    "extension",
+    "chatbot"
   ],
   "relatedTags": [
     "Artificial Intelligence",
