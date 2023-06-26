@@ -4,6 +4,21 @@ Version History
 
 ## [Unreleased]
 
+## [Release 0.2.0]
+
+- Copy code
+- Auto response
+- Formatting
+
+## What's Changed
+* Feature/format code by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/23
+* update(gif): Added new gif to reflect program by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/24
+* feature(code-box): Can copy code and load responses by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/25
+* Release 0.2.0 by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/26
+
+
+**Full Changelog**: https://github.com/Iheuzio/gpt-contextfiles/compare/0.1.3...0.2.0
+
 ## [Release 0.1.3]
 
 ## What's Changed
