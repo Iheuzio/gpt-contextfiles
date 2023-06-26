@@ -1,10 +1,6 @@
 # gpt-contextfiles
 
-** currently in development, if you'll like to contribute or provide any feedback check out the [link](https://github.com/Iheuzio/gpt-contextfiles/issues) **
-
-I was annoyed with copying responses into chatgpt and other LLMs for debugging my code across files, so I decided to make an extension that will do that.
-
-You simply right click each file you want to pass through, check or uncheck the checkbox, then enter your question and pass along the response over the api to your LLM.
+> if you'll like to contribute or provide any feedback check out the [link](https://github.com/Iheuzio/gpt-contextfiles/issues)
 
 This extension uses the openai api, there are many models avaliable:
 
@@ -14,7 +10,11 @@ https://openai.com/pricing
 
 If you wish to change the model, you must change the model in the extension.js file
 
-https://platform.openai.com/docs/models/gpt-3-5
+# Examples
+
+Demo of how to use the extension:
+![](./images/demo-program.gif)
+
 
 # Installation
 
@@ -31,13 +31,8 @@ Refresh -> refreshes the window so that all new files will be available for that
 - Right click to add files to the context window
 - Click on the extension addon to open the context window, refresh to update the files to check.
 - Select the files uses checkboxes
-- After submit is pressed, wait until the question disappears, this means the query is processed by openai and was fully sent
-- Click `API Response` to view your query
-
-# Examples
-
-Demo of how to use the extension:
-![](./images/demo-program.gif)
+- Wait for response to be returned
+- Copy the code (orange portion) and paste it into your code editor
 
 # How it works
 
