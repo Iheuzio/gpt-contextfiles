@@ -444,7 +444,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 </div>
             </div>
             <div class="form-group">
-                <div class="collapsible" onclick="toggleApiResponse()" id="alert-response">
+                <div class="collapsible" onclick="toggleApiResponse()">
                     API Response
                 </div>
                 <div class="content" id="api-response">
@@ -455,7 +455,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                     apiResponse ? `
                     <div id="rendered">
                         <p id="responses">
-                        <pre id="response">${apiResponse.replace(/```([^```]+)```/g, '<button onclick="copyCode()" id="code-block"><code>$1</code></button>')}</pre>
+                            <pre id="response">${apiResponse.replace(/```([^```]+)```/g, '<button onclick="copyCode()" id="code-block"><code>$1</code></button>')}</pre>
                         </p>
                     </div>
                     ` : null
@@ -469,8 +469,13 @@ function getWebviewContent(apiResponse = '', question = '') {
                 </div>
             </div>
             <script>
+                
                 const vscode = acquireVsCodeApi();
-    
+                
+                if (${apiResponse !== ''}){
+                    toggleApiResponse();
+                }
+
                 function copyCode() {
                     event.preventDefault();
                     const codeBlocks = document.getElementsByTagName('code');
@@ -490,22 +495,6 @@ function getWebviewContent(apiResponse = '', question = '') {
                         });
                     }
                 }
-    
-                // Add an event listener to detect changes in apiResponse
-                window.addEventListener('DOMContentLoaded', () => {
-                    const observer = new MutationObserver(() => {
-                        if (apiResponse !== null) {
-                            const alert = document.getElementById('alert-response');
-                            alert.style.backgroundColor = '#4CAF50';
-                        }
-                    });
-    
-                    observer.observe(document, {
-                        childList: true,
-                        subtree: true
-                    });
-                });
-    
     
                 function toggleFileSelection(uri) {
                     vscode.postMessage({
@@ -543,7 +532,6 @@ function getWebviewContent(apiResponse = '', question = '') {
                         collapsible.classList.add('active');
                     }
                 }
-    
     
                 const form = document.getElementById('questionForm');
                 function submitQuestionApi() {
