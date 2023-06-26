@@ -1,6 +1,6 @@
 # gpt-contextfiles
 
-![gpt-contextfiles viewport](extension.png)
+![gpt-contextfiles viewport](./images/extension.png)
 
 > if you'll like to contribute or provide any feedback check out the [link](https://github.com/Iheuzio/gpt-contextfiles/issues)
 
@@ -36,7 +36,7 @@ Refresh -> refreshes the window so that all new files will be available for that
 - Wait for response to be returned
 
 Other features:
-![Copy button demonstration](copy-image.png)
+![Copy button demonstration](./images/copy-image.png)
 - Click copy to to copy the snippet of code into your file for fast coding
 
 # How it works

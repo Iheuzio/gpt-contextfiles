@@ -4,6 +4,16 @@ Version History
 
 ## [Unreleased]
 
+## [Release 0.2.1]
+
+## What's Changed
+* Update/logo by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/28
+* feature(copy-code): add a copy, button improved ui by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/29
+* Release 0.2.1 by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/30
+
+
+**Full Changelog**: https://github.com/Iheuzio/gpt-contextfiles/compare/0.2.0...0.2.1
+
 ## [Release 0.2.0]
 
 - Copy code
