@@ -98,7 +98,7 @@ async function handleQuestionSubmission(panel, question, selectedUris) {
     // Call OpenAI API with the question and file contents
     try {
         const chatCompletion = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo-16k",
+            model: "gpt-3.5-turbo",
             messages: [
                 { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
                 { role: "user", content: question + "\n" + fileContents},
@@ -418,17 +418,41 @@ function getWebviewContent(apiResponse = '', question = '') {
             }
     
             #code-block {
-                padding: 0;
-                background: none;
+                padding: 10px 0 10px 10px; 
+                padding-
+                border-radius: 5px;
+                background-color: black;
                 border: none;
                 font: inherit;
                 color: inherit;
                 cursor: pointer;
                 outline: inherit;
-                margin: 0;
                 width: 100%;
                 text-align: left;
+                display: inline-block;
+                position: relative;
             }
+
+            #copy-button {
+                padding: 5px;
+                border-radius: 5px;
+                background-color: #007acc;
+                border: none;
+                font: inherit;
+                color: #fff;
+                cursor: pointer;
+                outline: inherit;
+                margin: 5px;
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            #copy-button:hover {
+                background-color: #fff;
+                color: #000;
+            }
+
         </style>
     </head>
     
@@ -455,7 +479,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                     apiResponse ? `
                     <div id="rendered">
                         <p id="responses">
-                            <pre id="response">${apiResponse.replace(/```([^```]+)```/g, '<button onclick="copyCode()" id="code-block"><code>$1</code></button>')}</pre>
+                            <pre id="response">${apiResponse.replace(/```([^```]+)```/g, '<div  id="code-block"><code>$1</code><button onclick="copyCode(event)" id="copy-button">copy</button></div>')}</pre>
                         </p>
                     </div>
                     ` : null
@@ -476,20 +500,19 @@ function getWebviewContent(apiResponse = '', question = '') {
                     toggleApiResponse();
                 }
 
-                function copyCode() {
+                function copyCode(event) {
                     event.preventDefault();
-                    const codeBlocks = document.getElementsByTagName('code');
-                    const selectedCodeBlock = event.target.closest('code');
-    
-                    if (selectedCodeBlock) {
-                        const codeText = selectedCodeBlock.innerText;
+                    const codeBlock = event.target.parentNode.querySelector('code');
+                
+                    if (codeBlock) {
+                        const codeText = codeBlock.innerText;
                         const dummyTextArea = document.createElement('textarea');
                         dummyTextArea.value = codeText;
                         document.body.appendChild(dummyTextArea);
                         dummyTextArea.select();
                         document.execCommand('copy');
                         document.body.removeChild(dummyTextArea);
-    
+                
                         vscode.postMessage({
                             command: 'codeCopied'
                         });
