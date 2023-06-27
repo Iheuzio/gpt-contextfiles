@@ -55,6 +55,9 @@ function getWebviewContent(apiResponse = '', question = '') {
     
             #response {
                 white-space: pre-wrap;
+                background: #343434;
+                border-radius: 5px;
+                padding: 10px;
             }
     
             #file-list {
