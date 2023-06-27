@@ -10,7 +10,7 @@ https://openai.com/pricing
 
 > However, being orientated with managing files this project defaults to the 16k context with GPT-3.5-turbo-16k
 
-If you wish to change the model, you must change the model in the extension.js file
+If you wish to change the model, you must change the model in the `./src/gptContext.js` file
 
 # Examples
 
@@ -38,6 +38,8 @@ Refresh -> refreshes the window so that all new files will be available for that
 Other features:
 ![Copy button demonstration](./images/copy-image.png)
 - Click copy to to copy the snippet of code into your file for fast coding
+
+![Copy individual code](./images/demo-copying-quotes.gif)
 
 # How it works
 
