@@ -2,7 +2,7 @@
   "name": "gpt-contextfiles",
   "displayName": "GPT-ContextFiles",
   "description": "Choose the files to pass into GPT to provide a question with multiple files",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "engines": {
     "vscode": "^1.79.0"
   },
@@ -39,7 +39,7 @@
     "onCommand:extension.openGPTContextPanel",
     "onCommand:extension.gpt-context-sidebar"
   ],
-  "main": "./extension.js",
+  "main": "./src/extension.js",
   "contributes": {
     "commands": [
       {
