@@ -4,6 +4,18 @@ Version History
 
 ## [Unreleased]
 
+## [Release 0.2.2]
+
+## What's Changed
+* Fix/organize files by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/32
+* Fix/style rendered by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/33
+* fix(style-rendered): padding around response by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/34
+* update(readme-fix): added new features to readme by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/35
+* Release 0.2.2 by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/36
+
+
+**Full Changelog**: https://github.com/Iheuzio/gpt-contextfiles/compare/0.2.1...0.2.2
+
 ## [Release 0.2.1]
 
 ## What's Changed
