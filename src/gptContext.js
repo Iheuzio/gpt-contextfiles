@@ -1,7 +1,6 @@
 const vscode = require('vscode');
 const { Configuration, OpenAIApi } = require("openai");
 const FileDataProvider = require('./fileDataProvider');
-const FileItem = require('./fileItem');
 const { getWebviewContent } = require('./webviewPanel');
 
 
