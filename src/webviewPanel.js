@@ -27,20 +27,20 @@ function getWebviewContent(apiResponse = '', question = '') {
                 color: #d4d4d4;
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
-    
+            
             .textbox {
                 width: 100%;
                 height: 200px;
                 resize: both;
                 padding: 10px;
             }
-    
+            
             .buttons {
                 display: flex;
                 justify-content: space-between;
                 width: 50%;
             }
-    
+            
             .button {
                 flex-grow: 1;
                 background-color: #007acc;
@@ -52,31 +52,30 @@ function getWebviewContent(apiResponse = '', question = '') {
                 outline: none;
                 font-size: 14px;
             }
-    
+            
             #response {
                 white-space: pre-wrap;
                 background: #343434;
                 border-radius: 5px;
                 padding: 10px;
             }
-    
+            
             #file-list {
                 margin-top: 20px;
-                border
             }
-    
+            
             .form-group {
                 display: flex;
                 flex-direction: column;
                 margin-bottom: 20px;
                 width: 100%;
             }
-    
+            
             .form-group label {
                 margin-bottom: 5px;
                 font-size: 14px;
             }
-    
+            
             .form-group input[type="text"] {
                 padding: 10px;
                 font-size: 14px;
@@ -85,17 +84,17 @@ function getWebviewContent(apiResponse = '', question = '') {
                 background-color: #2d2d2d;
                 color: #d4d4d4;
             }
-    
+            
             .form-group input[type="text"]::placeholder {
                 color: #d4d4d4;
             }
-    
+            
             .form-group .button-options {
                 display: flex;
                 justify-content: space-between;
                 margin-top: 10px;
             }
-    
+            
             .form-group .button-options button {
                 padding: 10px;
                 font-size: 14px;
@@ -105,61 +104,61 @@ function getWebviewContent(apiResponse = '', question = '') {
                 background-color: #007acc;
                 color: #fff;
             }
-    
+            
             .form-group .button-options button:hover {
                 background-color: #005f8c;
             }
-    
+            
             .form-group .button-options button:active {
                 background-color: #004d73;
             }
-    
+            
             .form-group .button-options button:focus {
                 box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.5);
             }
-    
+            
             .file-list {
                 margin-top: 20px;
                 width: 100%;
             }
-    
+            
             .file-list h2 {
                 margin-bottom: 10px;
                 font-size: 14px;
             }
-    
+            
             .file-list .file-item {
                 display: flex;
                 align-items: center;
                 margin-bottom: 5px;
                 font-size: 14px;
             }
-    
+            
             .file-list .file-item input[type="checkbox"] {
                 margin-right: 5px;
             }
-    
+            
             .file-list .file-item label {
                 margin-bottom: 0;
             }
-    
+            
             .file-list .file-item .file-path {
                 overflow-wrap: break-word;
             }
-    
+            
             .file-list .file-item .file-path:hover {
                 text-decoration: underline;
                 cursor: pointer;
             }
-    
+            
             .file-list .file-item .file-path:active {
                 color: #007acc;
             }
-    
+            
             .file-list .file-item .file-path:focus {
                 box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.5);
             }
-    
+            
             .collapsible {
                 background-color: #2d2d2d;
                 color: #d4d4d4;
@@ -171,19 +170,19 @@ function getWebviewContent(apiResponse = '', question = '') {
                 text-align: left;
                 font-size: 14px;
             }
-    
+            
             .collapsible:hover {
                 background-color: #3c3c3c;
             }
-    
+            
             .collapsible:active {
                 background-color: #4c4c4c;
             }
-    
+            
             .collapsible:focus {
                 box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.5);
             }
-    
+            
             .content {
                 padding: 0 10px;
                 display: none;
@@ -191,21 +190,21 @@ function getWebviewContent(apiResponse = '', question = '') {
                 background-color: #f1f1f1;
                 width: 98%;
             }
-    
+            
             .content p {
                 font-size: 14px;
                 margin: 0;
             }
-    
+            
             .active,
             .collapsible:hover {
                 background-color: #555;
             }
-    
+            
             .active:after {
                 content: "\\2212";
             }
-    
+            
             .collapsible:after {
                 content: "\\002B";
                 color: #d4d4d4;
@@ -213,11 +212,11 @@ function getWebviewContent(apiResponse = '', question = '') {
                 float: right;
                 margin-left: 5px;
             }
-    
+            
             .active:after {
                 content: "\\2212";
             }
-    
+            
             .collapsible:after {
                 content: "\\002B";
                 color: #d4d4d4;
@@ -225,7 +224,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 float: right;
                 margin-left: 5px;
             }
-    
+            
             #rendered {
                 background-color: #2d2d2d;
                 word-wrap: wrap;
@@ -235,7 +234,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 padding: 10px;
                 color: white;
             }
-    
+            
             #question-rep {
                 font-weight: bold;
                 background-color: #2d2d2d;
@@ -245,14 +244,13 @@ function getWebviewContent(apiResponse = '', question = '') {
                 padding: 10px;
                 margin-top: 20px;
             }
-    
+            
             div#api-response.content.active {
                 background-color: #313131;
             }
-    
+            
             #code-block {
                 padding: 10px 0 10px 10px; 
-                padding-
                 border-radius: 5px;
                 background-color: black;
                 border: none;
@@ -265,7 +263,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 display: inline-block;
                 position: relative;
             }
-
+            
             #copy-button {
                 padding: 5px;
                 border-radius: 5px;
@@ -280,12 +278,12 @@ function getWebviewContent(apiResponse = '', question = '') {
                 top: 0;
                 right: 0;
             }
-
+            
             #copy-button:hover {
                 background-color: #fff;
                 color: #000;
             }
-
+        
         </style>
     </head>
     
