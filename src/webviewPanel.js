@@ -162,7 +162,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 color: #d4d4d4;
                 cursor: pointer;
                 padding: 10px;
-                width: 100%;
+                width: 95%;
                 border: none;
                 outline: none;
                 text-align: left;
@@ -186,12 +186,12 @@ function getWebviewContent(apiResponse = '', question = '') {
                 display: none;
                 overflow: hidden;
                 background-color: #f1f1f1;
-                width: 100%;
+                width: 95%;
             }
     
             .content p {
-                margin-top: 0;
                 font-size: 14px;
+                margin: 0;
             }
     
             .active,
@@ -230,6 +230,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 border: 1px solid white;
                 border-radius: 5px;
                 padding: 10px;
+                color: white;
             }
     
             #question-rep {
@@ -238,6 +239,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 word-wrap: wrap;
                 border: 1px solid white;
                 border-radius: 5px;
+                padding: 10px;
             }
     
             div#api-response.content.active {
@@ -254,7 +256,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 color: inherit;
                 cursor: pointer;
                 outline: inherit;
-                width: 100%;
+                width: 98%;
                 text-align: left;
                 display: inline-block;
                 position: relative;
