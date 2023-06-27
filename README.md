@@ -10,7 +10,7 @@ https://openai.com/pricing
 
 > However, being orientated with managing files this project defaults to the 16k context with GPT-3.5-turbo-16k
 
-If you wish to change the model, you must change the model in the extension.js file
+If you wish to change the model, you must change the model in the src/extension.js file
 
 # Examples
 
