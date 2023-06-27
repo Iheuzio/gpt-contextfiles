@@ -162,7 +162,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 color: #d4d4d4;
                 cursor: pointer;
                 padding: 10px;
-                width: 95%;
+                width: 98%;
                 border: none;
                 outline: none;
                 text-align: left;
@@ -186,7 +186,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 display: none;
                 overflow: hidden;
                 background-color: #f1f1f1;
-                width: 95%;
+                width: 98%;
             }
     
             .content p {
