@@ -240,6 +240,7 @@ function getWebviewContent(apiResponse = '', question = '') {
                 border: 1px solid white;
                 border-radius: 5px;
                 padding: 10px;
+                margin-top: 20px;
             }
     
             div#api-response.content.active {
