@@ -39,7 +39,7 @@ async function handleQuestionSubmission(panel, question, selectedUris) {
         const chatCompletion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo-16k",
             messages: [
-                { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code." },
+                { role: "system", content: "Answer the coding questions, only provide the code and documentation, explaining the solution after providing the code. Put codeblocks inside ``` code ``` with file names above each snippet." },
                 { role: "user", content: question + "\n" + fileContents},
             ],
         });
