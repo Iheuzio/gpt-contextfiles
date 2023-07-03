@@ -304,13 +304,19 @@ function getWebviewContent(apiResponse = '', question = '') {
                 </div>
                 <div class="content" id="api-response">
                     <div id="question-rep">
-                        <p>${question ? '> ' + question : null}</p>
+                        <p>${
+                            question = question.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+                            question ? '> ' + question : null
+                        }</p>
                     </div>
                     ${
                     apiResponse ? `
                     <div id="rendered">
                         <p id="responses">
-                            <pre id="response">${apiResponse.replace(/```([^```]+)```/g, '<div  id="code-block"><code>$1</code><button onclick="copyCode(event)" id="copy-button">copy</button></div>')}</pre>
+                            <pre id="response">${
+                                apiResponse = apiResponse.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+                                apiResponse.replace(/```([^```]+)```/g, '<div  id="code-block"><code>$1</code><button onclick="copyCode(event)" id="copy-button">copy</button></div>')
+                            }</pre>
                         </p>
                     </div>
                     ` : null
