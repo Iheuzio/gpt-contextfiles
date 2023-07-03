@@ -2,7 +2,7 @@
   "name": "gpt-contextfiles",
   "displayName": "GPT-ContextFiles",
   "description": "Choose the files to pass into GPT to provide a question with multiple files",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "engines": {
     "vscode": "^1.79.0"
   },
