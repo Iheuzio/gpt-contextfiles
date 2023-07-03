@@ -4,6 +4,15 @@ Version History
 
 ## [Unreleased]
 
+## [Release 0.2.3]
+
+## What's Changed
+* fix(display-html): html is now properly displayed by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/38
+* Release 0.2.3 by @Iheuzio in https://github.com/Iheuzio/gpt-contextfiles/pull/39
+
+
+**Full Changelog**: https://github.com/Iheuzio/gpt-contextfiles/compare/0.2.2...0.2.3
+
 ## [Release 0.2.2]
 
 ## What's Changed
